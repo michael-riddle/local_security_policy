@@ -1,3 +1,6 @@
+## [0.8.2] - 2022-02-09
+- Fix idempotency of local groups and users in Privilege Rights settings - #113
+
 ## [0.8.1] - 2020-11-24
 ### Changed
 - Fixed 'SDDL values are not idempotent' - #108
