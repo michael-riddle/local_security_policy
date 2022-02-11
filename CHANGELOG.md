@@ -1,5 +1,10 @@
-## [0.8.2] - 2022-02-09
+## [1.0.0] - 2022-02-09
+### Added
+- Add Puppet7 Support - #115
+
+### Changed
 - Fix idempotency of local groups and users in Privilege Rights settings - #113
+- Moved travis-ci tests to GitHub Actions - #119
 
 ## [0.8.1] - 2020-11-24
 ### Changed
