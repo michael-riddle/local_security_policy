@@ -137,7 +137,7 @@ Puppet::Type.type(:local_security_policy).provide(:policy) do
 
   def self.prefetch(resources)
     policies = instances
-    resources.keys.each do |name|
+    resources.each_key do |name|
       if found_pol = policies.find { |pol| pol.name == name } # rubocop:disable Lint/AssignmentInCondition
         resources[name].provider = found_pol
       end
