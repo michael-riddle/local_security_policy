@@ -561,6 +561,31 @@ class SecurityPolicy
         reg_type: '1',
         policy_type: 'Registry Values',
       },
+      'Domain controller: Allow server operators to schedule tasks' => {
+        name: 'MACHINE\System\CurrentControlSet\Control\Lsa\SubmitControl',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
+      'Domain controller: Allow vulnerable Netlogon secure channel connections' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\VulnerableChannelAllowList',
+        reg_type: '1',
+        policy_type: 'Registry Values',
+      },
+      'Domain controller: LDAP server channel binding token requirements' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LdapEnforceChannelBinding',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
+      'Domain controller: LDAP server signing requirements' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
+      'Domain controller: Refuse machine account password changes' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RefusePasswordChange',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
       'Domain member: Digitally encrypt or sign secure channel data (always)' => {
         name: 'MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal',
         reg_type: '4',

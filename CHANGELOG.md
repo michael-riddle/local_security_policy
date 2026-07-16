@@ -1,3 +1,6 @@
+## [1.2.0] - 2026-07-16
+- Add support for 'Domain controller' security options (Allow server operators to schedule tasks, Allow vulnerable Netlogon secure channel connections, LDAP server channel binding token requirements, LDAP server signing requirements, Refuse machine account password changes)
+
 ## [1.1.1] - 2023-01-03
 - Fixed SID order idempotency - #124
 
