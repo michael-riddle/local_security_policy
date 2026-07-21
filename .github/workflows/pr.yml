@@ -25,6 +25,9 @@ jobs:
         with:
           ruby-version: ${{matrix.puppet.ruby_version}}
           bundler-cache: true
+      # check:symlinks is intentionally omitted here: that rake task no longer
+      # exists under the voxpupuli-test toolchain (confirmed via `rake --tasks`),
+      # unlike check:git_ignore/check:dot_underscore/check:test_file, which do.
       - run: bundle exec rake syntax lint metadata_lint check:git_ignore check:dot_underscore check:test_file rubocop
 
   parallel_spec:
