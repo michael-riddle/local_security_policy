@@ -14,6 +14,8 @@ module PuppetlabsSpec
     def my_fixture_dir
       callers = caller
       path = callers.find { |c| c =~ %r{_spec\.rb} }
+      raise "my_fixture/my_fixture_dir must be called from a *_spec.rb file; no such frame was found in the call stack: #{callers.first(5).join(', ')}" unless path
+
       path = path.split(%r{:\d+}).first
       path.sub(%r{spec/(?!fixtures)}, 'spec/fixtures/').sub(%r{_spec\.rb$}, '')
     end

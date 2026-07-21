@@ -20,7 +20,7 @@ jobs:
       PUPPET_VERSION: ${{matrix.puppet.puppet_version}}
       BUNDLE_WITHOUT: 'acceptance:system_tests'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{matrix.puppet.ruby_version}}
@@ -47,7 +47,7 @@ jobs:
       PUPPET_VERSION: ${{matrix.puppet.puppet_version}}
       BUNDLE_WITHOUT: 'acceptance:system_tests'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{matrix.puppet.ruby_version}}
