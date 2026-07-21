@@ -18,8 +18,11 @@ jobs:
             ruby_version: '2.7'
     env:
       PUPPET_GEM_VERSION: ${{matrix.puppet.puppet_version}}
+      BUNDLE_WITHOUT: 'acceptance:system_tests'
     steps:
       - uses: actions/checkout@v2
+      - name: Install libcurl dev headers (needed to build the patron gem pulled in by faraday-patron)
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{matrix.puppet.ruby_version}}
@@ -41,8 +44,11 @@ jobs:
             ruby_version: '2.7'
     env:
       PUPPET_GEM_VERSION: ${{matrix.puppet.puppet_version}}
+      BUNDLE_WITHOUT: 'acceptance:system_tests'
     steps:
       - uses: actions/checkout@v2
+      - name: Install libcurl dev headers (needed to build the patron gem pulled in by faraday-patron)
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{matrix.puppet.ruby_version}}

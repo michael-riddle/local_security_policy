@@ -96,6 +96,42 @@ describe 'SecurityPolicy' do
     end
   end
 
+  describe 'domain controller policies' do
+    {
+      'Domain controller: Allow server operators to schedule tasks' =>
+        ['MACHINE\System\CurrentControlSet\Control\Lsa\SubmitControl', '4'],
+      'Domain controller: Allow vulnerable Netlogon secure channel connections' =>
+        ['MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\VulnerableChannelAllowList', '1'],
+      'Domain controller: LDAP server channel binding token requirements' =>
+        ['MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LdapEnforceChannelBinding', '4'],
+      'Domain controller: LDAP server signing requirements' =>
+        ['MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity', '4'],
+      'Domain controller: Refuse machine account password changes' =>
+        ['MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RefusePasswordChange', '4'],
+    }.each do |policy_desc, (reg_key, reg_type)|
+      it "maps #{policy_desc}" do
+        mapping = SecurityPolicy.find_mapping_from_policy_desc(policy_desc)
+        expect(mapping[:name]).to eq(reg_key)
+        expect(mapping[:reg_type]).to eq(reg_type)
+        expect(mapping[:policy_type]).to eq('Registry Values')
+      end
+
+      it "reverse maps #{reg_key}" do
+        name, = SecurityPolicy.find_mapping_from_policy_name(reg_key)
+        expect(name).to eq(policy_desc)
+      end
+    end
+
+    it 'converts a REG_DWORD registry value' do
+      expect(subject.convert_registry_value('Domain controller: LDAP server signing requirements', 2)).to eq('4,2')
+    end
+
+    it 'converts a REG_SZ registry value' do
+      expect(subject.convert_registry_value('Domain controller: Allow vulnerable Netlogon secure channel connections',
+                                            'O:BAG:BAD:(A;;RC;;;BA)')).to eq('1,O:BAG:BAD:(A;;RC;;;BA)')
+    end
+  end
+
   describe 'privilege right' do
     let(:resource) do
       Puppet::Type.type(:local_security_policy).new(

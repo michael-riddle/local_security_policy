@@ -27,6 +27,26 @@ describe Puppet::Type.type(:local_security_policy) do
       expect(resource[:policy_value]).to eq('4,0')
     end
 
+    it 'creates a domain controller registry value and derives its setting from the mapping' do
+      resource = Puppet::Type.type(:local_security_policy).new(
+        name: 'Domain controller: LDAP server signing requirements',
+        ensure: 'present',
+        policy_value: '2',
+      )
+      expect(resource[:policy_value]).to eq('4,2')
+      expect(resource[:policy_setting]).to eq('MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity')
+    end
+
+    it 'creates a domain controller string registry value' do
+      resource = Puppet::Type.type(:local_security_policy).new(
+        name: 'Domain controller: Allow vulnerable Netlogon secure channel connections',
+        ensure: 'present',
+        policy_value: 'O:BAG:BAD:(A;;RC;;;BA)',
+      )
+      expect(resource[:policy_value]).to eq('1,O:BAG:BAD:(A;;RC;;;BA)')
+      expect(resource[:policy_setting]).to eq('MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\VulnerableChannelAllowList')
+    end
+
     it 'creates an event audit value' do
       resource = Puppet::Type.type(:local_security_policy).new(
         name: 'Audit account logon events',
