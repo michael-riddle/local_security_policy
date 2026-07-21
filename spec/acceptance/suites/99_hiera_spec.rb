@@ -29,9 +29,7 @@ describe 'local_security_policy' do
       hosts.each do |host|
         value = on(host, 'type C:\secedit.txt')
         expect(value.output).to match(%r{^PasswordHistorySize\s*=\s*30$})
-      end
 
-      hosts.each do |host|
         value = on(host, 'auditpol /get /category:*')
         expect(value.output).to match(%r{^\s*Credential Validation\s*Success$})
       end

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 require 'fileutils'
@@ -6,7 +5,7 @@ require 'fileutils'
 begin
   require 'puppet_x/twp/inifile'
   require 'puppet_x/lsp/security_policy'
-rescue LoadError => _detail
+rescue LoadError => _e
   require 'pathname' # JJM WORK_AROUND #14073
   mod = Puppet::Module.find('local_security_policy', Puppet[:environment].to_s)
   if mod
@@ -64,9 +63,8 @@ Puppet::Type.type(:local_security_policy).provide(:policy) do
     when :quoted_string
       value = "\"#{value}\""
     when :principal
-      sids = Array.[]
-      value.split(',').each do |suser|
-        sids << ((suser !~ %r{^(\*S-1-.+)$}) ? ('*' + Puppet::Util::Windows::SID.name_to_sid(suser).to_s) : suser.to_s)
+      sids = value.split(',').map do |suser|
+        (suser =~ %r{^(\*S-1-.+)$}) ? suser.to_s : ("*#{Puppet::Util::Windows::SID.name_to_sid(suser)}")
       end
       value = sids.sort.join(',')
     end
@@ -85,6 +83,7 @@ Puppet::Type.type(:local_security_policy).provide(:policy) do
     inf.each do |section, parameter_name, parameter_value|
       next if section == 'Unicode'
       next if section == 'Version'
+
       begin
         ensure_value = parameter_value.nil? ? :absent : :present
         policy_desc, policy_values = SecurityPolicy.find_mapping_from_policy_name(parameter_name)
@@ -119,7 +118,7 @@ Puppet::Type.type(:local_security_policy).provide(:policy) do
   end
 
   def initialize(value = {})
-    super(value)
+    super
     @property_flush = {}
   end
 

@@ -1,6 +1,4 @@
 ---
-inherit_from: .rubocop_todo.yml
-
 inherit_gem:
   voxpupuli-test: rubocop.yml
 
@@ -80,3 +78,13 @@ Style/Documentation:
   - spec/**/*
 Style/WordArray:
   EnforcedStyle: brackets
+RSpec/MultipleMemoizedHelpers:
+  Description: A handful of these provider specs need one more `let` than the
+    default allows; restructuring them into fewer, larger fixtures would hurt
+    readability more than it helps.
+  Max: 6
+Style/MixinUsage:
+  Description: spec_helper.rb includes RspecPuppetFacts at the top level, which
+    is the standard convention across PDK/voxpupuli module spec_helpers.
+  Exclude:
+  - spec/spec_helper.rb

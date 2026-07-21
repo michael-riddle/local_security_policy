@@ -2,7 +2,7 @@
 
 begin
   require 'puppet_x/lsp/security_policy'
-rescue LoadError => _detail
+rescue LoadError => _e
   require 'pathname' # JJM WORK_AROUND #14073
   mod = Puppet::Module.find('local_security_policy', Puppet[:environment].to_s)
   if mod
@@ -100,9 +100,7 @@ Puppet::Type.newtype(:local_security_policy) do
         # REG_DWORD 4
         when '4'
           test_val = value.to_i
-          if test_val < -2_147_483_648 || test_val > 2_147_483_647
-            raise ArgumentError, "Invalid value for type: #{test_val} for REG_DWORD"
-          end
+          raise ArgumentError, "Invalid value for type: #{test_val} for REG_DWORD" if test_val < -2_147_483_648 || test_val > 2_147_483_647
         # REG_DWORD_LITTLE_ENDIAN 4
         # REG_DWORD_BIG_ENDIAN 5
         # REG_LINK 6
@@ -115,9 +113,7 @@ Puppet::Type.newtype(:local_security_policy) do
         # REG_QWORD 11
         when '11'
           test_val = value.to_i
-          if test_val < -9_223_372_036_854_775_808 || test_val > 9_223_372_036_854_775_807
-            raise ArgumentError, "Invalid value for type: #{test_val} for REG_QWORD"
-          end
+          raise ArgumentError, "Invalid value for type: #{test_val} for REG_QWORD" if test_val < -9_223_372_036_854_775_808 || test_val > 9_223_372_036_854_775_807
           # REG_QWORD_LITTLE_ENDIAN 11
         end
       when 'System Access'
