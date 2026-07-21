@@ -1,3 +1,11 @@
+## [2.0.0] - 2026-07-21
+### Changed
+- **BREAKING**: Replace Puppet 6/7 support with OpenVox 8; CI now runs on Ruby 3.2 and Ruby 4.0. The Gemfile now depends on the `openvox` gem (via `voxpupuli-test`) instead of `puppet`, and `PUPPET_VERSION` replaces `PUPPET_GEM_VERSION`
+- **BREAKING**: Drop support for Windows 10, Windows Server 2012, and Windows Server 2012 R2
+
+### Added
+- Add support for Windows Server 2025
+
 ## [1.2.0] - 2026-07-16
 - Add support for 'Domain controller' security options (Allow server operators to schedule tasks, Allow vulnerable Netlogon secure channel connections, LDAP server channel binding token requirements, LDAP server signing requirements, Refuse machine account password changes)
 

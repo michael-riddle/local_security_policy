@@ -4,8 +4,25 @@ RSpec.configure do |c|
   c.mock_with :rspec
 end
 
-require 'puppetlabs_spec_helper/module_spec_helper'
+require 'voxpupuli/test/spec_helper'
 require 'rspec-puppet-facts'
+
+# puppetlabs_spec_helper provided this; voxpupuli-test does not, so shim it
+# to keep `include PuppetlabsSpec::Fixtures` / `my_fixture` working in specs.
+module PuppetlabsSpec
+  module Fixtures
+    def my_fixture_dir
+      callers = caller
+      path = callers.find { |c| c =~ %r{_spec\.rb} }
+      path = path.split(%r{:\d+}).first
+      path.sub(%r{spec/(?!fixtures)}, 'spec/fixtures/').sub(%r{_spec\.rb$}, '')
+    end
+
+    def my_fixture(file)
+      File.join(my_fixture_dir, file)
+    end
+  end
+end
 
 require 'spec_helper_local' if File.file?(File.join(File.dirname(__FILE__), 'spec_helper_local.rb'))
 
@@ -25,7 +42,7 @@ default_fact_files.each do |f|
   next unless File.exist?(f) && File.readable?(f) && File.size?(f)
 
   begin
-    default_facts.merge!(YAML.safe_load(File.read(f), [], [], true))
+    default_facts.merge!(YAML.safe_load_file(f, permitted_classes: [], permitted_symbols: [], aliases: true))
   rescue => e
     RSpec.configuration.reporter.message "WARNING: Unable to load #{f}: #{e}"
   end
