@@ -33,10 +33,10 @@ describe 'local_security_policy' do
   context 'rename guest account' do
     let(:manifest) do
       <<~END
-          local_security_policy { 'Accounts: Rename guest account':
-            ensure       => present,
-            policy_value => '"lsp_guest"',
-          }
+        local_security_policy { 'Accounts: Rename guest account':
+          ensure       => present,
+          policy_value => '"lsp_guest"',
+        }
       END
     end
 
@@ -50,10 +50,10 @@ describe 'local_security_policy' do
   context 'rename administrator account' do
     let(:manifest) do
       <<~END
-          local_security_policy { 'Accounts: Rename administrator account':
-            ensure       => present,
-            policy_value => '"lsp_admin"',
-          }
+        local_security_policy { 'Accounts: Rename administrator account':
+          ensure       => present,
+          policy_value => '"lsp_admin"',
+        }
       END
     end
 

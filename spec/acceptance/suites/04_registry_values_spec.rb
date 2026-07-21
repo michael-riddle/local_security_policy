@@ -5,7 +5,7 @@ require 'json'
 
 def get_reg_key_on(host, key)
   powershell = 'powershell.exe -noprofile -nologo -noninteractive -command'
-  ps = on host, %(#{powershell} "Get-ItemProperty -Path \\\"#{key}\\\" | ConvertTo-Json")
+  ps = on host, %(#{powershell} "Get-ItemProperty -Path \\"#{key}\\" | ConvertTo-Json")
   JSON.parse(ps.stdout)
 end
 
@@ -13,10 +13,10 @@ describe 'local_security_policy' do
   context 'enable registry value policy' do
     let(:manifest) do
       <<~END
-      local_security_policy { 'Network access: Restrict clients allowed to make remote calls to SAM':
-        ensure => present,
-        policy_value => '1,"O:BAG:BAD:(A;;RC;;;BA)"',
-      }
+        local_security_policy { 'Network access: Restrict clients allowed to make remote calls to SAM':
+          ensure => present,
+          policy_value => '1,"O:BAG:BAD:(A;;RC;;;BA)"',
+        }
       END
     end
 
@@ -37,10 +37,10 @@ describe 'local_security_policy' do
   context 'disable registry value policy' do
     let(:manifest) do
       <<~END
-      local_security_policy { 'Network access: Restrict clients allowed to make remote calls to SAM':
-        ensure => present,
-        policy_value => '',
-      }
+        local_security_policy { 'Network access: Restrict clients allowed to make remote calls to SAM':
+          ensure => present,
+          policy_value => '',
+        }
       END
     end
 

@@ -7,12 +7,13 @@
 -%>
 ---
 HOSTS:
-  win10:
+  win2025:
     roles:
       - default
       - windows
     platform: windows-server-amd64
-    box: gusztavvargadr/windows-10
+    box: 'gusztavvargadr/windows-server'
+    box_version: '~> 2503'
     hypervisor: <%= hypervisor %>
     vagrant_memsize: 2048
     vagrant_cpus: 2
@@ -22,4 +23,4 @@ HOSTS:
 CONFIG:
   log_level: verbose
   type: aio
-  puppet_collection: <%= ENV['BEAKER_PUPPET_COLLECTION'] || 'puppet7' %>
+  puppet_collection: <%= ENV['BEAKER_PUPPET_COLLECTION'] || 'openvox8' %>

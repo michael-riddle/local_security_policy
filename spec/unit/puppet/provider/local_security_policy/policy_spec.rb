@@ -3,27 +3,24 @@
 require 'spec_helper'
 require 'awesome_print'
 
-provider_class = Puppet::Type.type(:local_security_policy).provider(:policy)
-
-# rubocop:disable RSpec/SubjectStub,RSpec/NamedSubject
-describe provider_class do
+# rubocop:disable RSpec/SubjectStub
+describe Puppet::Type.type(:local_security_policy).provider(:policy) do
   include PuppetlabsSpec::Fixtures
 
-  subject { provider_class }
+  subject { described_class }
 
   before(:each) do
     allow(Puppet::Util).to receive(:which).with('secedit').and_return('c:\\tools\\secedit')
 
     infout = StringIO.new
     sdbout = StringIO.new
-    allow(provider_class).to receive(:read_policy_settings).and_return(inf_data)
-    allow(subject).to receive(:read_policy_settings).and_return(inf_data)
+    allow(described_class).to receive(:read_policy_settings).and_return(inf_data)
     allow(Tempfile).to receive(:new).with('infimport').and_return(infout)
     allow(Tempfile).to receive(:new).with('sdbimport').and_return(sdbout)
     allow(File).to receive(:file?).with(secdata).and_return(true)
     # the below mock seems to be required or rspec complains
     allow(File).to receive(:file?).with(%r{facter|lsb_release}).and_return(true)
-    allow(subject).to receive(:temp_file).and_return(secdata)
+    allow(subject).to receive_messages(read_policy_settings: inf_data, temp_file: secdata)
     allow(subject).to receive(:secedit).with(['/configure', '/db', 'sdbout', '/cfg', 'infout', '/quiet']).and_return(true)
     allow(subject).to receive(:secedit).with(['/export', '/cfg', secdata, '/quiet']).and_return(true)
   end
@@ -53,11 +50,11 @@ describe provider_class do
     )
   end
   let(:provider) do
-    provider_class.new(resource)
+    described_class.new(resource)
   end
 
   it 'creates instances without error' do
-    instances = provider_class.instances
+    instances = described_class.instances
     expect(instances.class).to eq(Array)
     expect(instances.count).to be >= 114
   end
@@ -71,25 +68,25 @@ describe provider_class do
     inffile.sections.each do |section|
       next if section == 'Unicode'
       next if section == 'Version'
+
       inffile[section].each do |name, value|
-        begin
-          SecurityPolicy.find_mapping_from_policy_name(name)
-        rescue KeyError => e
-          puts e.message
-          if value && section == 'Registry Values'
-            reg_type = value.split(',').first
-            missing_policies[name] = { name: name, policy_type: section, reg_type: reg_type }
-          else
-            missing_policies[name] = { name: name, policy_type: section }
-          end
+        SecurityPolicy.find_mapping_from_policy_name(name)
+      rescue KeyError => e
+        puts e.message # rubocop:disable RSpec/Output -- diagnostic output for maintainers when this test fails, see comment above
+        if value && section == 'Registry Values'
+          reg_type = value.split(',').first
+          missing_policies[name] = { name: name, policy_type: section, reg_type: reg_type }
+        else
+          missing_policies[name] = { name: name, policy_type: section }
         end
       end
     end
-    ap missing_policies
+    ap missing_policies # rubocop:disable RSpec/Output -- diagnostic output for maintainers when this test fails, see comment above
+
     expect(missing_policies.count).to eq(0), 'Missing policy, check the lsp mapping'
   end
 
-  xit 'ensure instances works' do
+  it 'ensure instances works', skip: 'Puppet::Type.type(...).instances goes through provider suitability confinement (confine operatingsystem: :windows), so it returns 0 instances on this non-Windows test host' do
     instances = Puppet::Type.type(:local_security_policy).instances
     expect(instances.count).to be > 1
   end
@@ -122,7 +119,7 @@ describe provider_class do
     end
 
     it 'exists? is true' do
-      expect(provider.exists?).to eq(false)
+      expect(provider.exists?).to be(false)
       # until we can implement the destroy functionality this test is useless
       # expect(provider).to receive(:destroy).exactly(1).times
     end
@@ -159,8 +156,8 @@ describe provider_class do
     end
 
     it 'exists? is false' do
-      expect(provider.exists?).to eq(false)
-      allow(provider).to receive(:create).exactly(1).times
+      expect(provider.exists?).to be(false)
+      allow(provider).to receive(:create).once
     end
   end
 
@@ -168,3 +165,4 @@ describe provider_class do
     expect(provider).to be_an_instance_of Puppet::Type::Local_security_policy::ProviderPolicy
   end
 end
+# rubocop:enable RSpec/SubjectStub

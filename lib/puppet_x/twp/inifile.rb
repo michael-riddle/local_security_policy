@@ -1,9 +1,8 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 # This class represents the INI file and can be used to parse, modify,
 # and write INI files.
-module PuppetX # rubocop:disable Style/ClassAndModuleChildren
+module PuppetX
   # class IniFile
   class IniFile
     include Enumerable
@@ -31,6 +30,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # Returns an IniFile instance or nil if the file could not be opened.
     def self.load(filename, opts = {})
       return unless File.file? filename
+
       new(opts.merge(filename: filename))
     end
 
@@ -126,6 +126,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
       filename = opts.fetch(:filename, @filename)
       encoding = opts.fetch(:encoding, @encoding)
       return unless File.file? filename
+
       mode = encoding ? "r:#{encoding}" : 'r'
 
       File.open(filename, mode) { |fd| parse fd }
@@ -219,6 +220,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # Returns this IniFile.
     def each
       return unless block_given?
+
       @ini.each do |section, hash|
         hash.each do |param, val|
           yield section, param, val
@@ -239,9 +241,10 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     #   end
     #
     # Returns this IniFile.
-    def each_section
+    def each_section(&)
       return unless block_given?
-      @ini.each_key { |section| yield section }
+
+      @ini.each_key(&)
       self
     end
 
@@ -267,6 +270,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # Returns the Hash of parameter/value pairs for this section.
     def [](section)
       return nil if section.nil?
+
       @ini[section.to_s]
     end
 
@@ -306,7 +310,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # section - The section name as a String.
     #
     # Returns true if the section exists in the IniFile.
-    def has_section?(section) # rubocop:disable Style/PredicateName
+    def has_section?(section) # rubocop:disable Naming/PredicatePrefix
       @ini.key? section.to_s
     end
 
@@ -321,7 +325,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # Returns this IniFile.
     def freeze
       super
-      @ini.each_value { |h| h.freeze }
+      @ini.each_value(&:freeze)
       @ini.freeze
       self
     end
@@ -332,7 +336,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # Returns this IniFile.
     def taint
       super
-      @ini.each_value { |h| h.taint }
+      @ini.each_value(&:taint)
       @ini.taint
       self
     end
@@ -372,6 +376,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     def eql?(other)
       return true if equal? other
       return false unless other.instance_of? self.class
+
       @ini == other.instance_variable_get(:@ini)
     end
     alias == eql?
@@ -410,8 +415,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
     # object.
     class Parser
       attr_writer :section
-      attr_accessor :property
-      attr_accessor :value
+      attr_accessor :property, :value
 
       # Create a new IniFile::Parser that can be used to parse the contents of
       # an .ini file.
@@ -602,10 +606,10 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
           begin
             begin
               Integer(value)
-            rescue
+            rescue StandardError
               Float(value)
             end
-          rescue
+          rescue StandardError
             unescape_value(value)
           end
         end
@@ -621,7 +625,7 @@ module PuppetX # rubocop:disable Style/ClassAndModuleChildren
       def unescape_value(value)
         value = value.to_s
         value.gsub!(%r{\\[0nrt\\]}) do |char|
-          case char
+          case char # rubocop:disable Style/HashLikeCase -- leave as-is, this is vendored escape-parsing logic
           when '\0' then   "\0"
           when '\n' then   "\n"
           when '\r' then   "\r"

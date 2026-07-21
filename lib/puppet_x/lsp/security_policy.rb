@@ -9,8 +9,6 @@ class SecurityPolicy
   EVENT_TYPES = ['Success,Failure', 'Success', 'Failure', 'No auditing', 0, 1, 2, 3].freeze
   REGISTRY_TYPES = [1, 3, 4, 7].freeze
 
-  def initialize; end
-
   def user_to_sid(value)
     if value.match?(%r{^\*})
       result = value
@@ -19,7 +17,7 @@ class SecurityPolicy
       if user_sid.nil?
         warn("\"#{value}\" does not exist")
       else
-        result = '*' + user_sid
+        result = "*#{user_sid}"
       end
     end
     result
@@ -104,9 +102,8 @@ class SecurityPolicy
     key, value = lsp_mapping.find do |_key, hash|
       hash[:name] == name
     end
-    unless key && value
-      raise KeyError, "#{name} is not a valid policy"
-    end
+    raise KeyError, "#{name} is not a valid policy" unless key && value
+
     [key, value]
   end
 
@@ -116,9 +113,8 @@ class SecurityPolicy
     _key, value = lsp_mapping.find do |key, _hash|
       key.downcase == name
     end
-    unless value
-      raise KeyError, "#{desc} is not a valid policy"
-    end
+    raise KeyError, "#{desc} is not a valid policy" unless value
+
     value
   end
 
@@ -129,6 +125,7 @@ class SecurityPolicy
   def self.convert_registry_value(name, value)
     value = value.to_s
     return value if value.split(',').count > 1 && REGISTRY_TYPES.include?(value.split(',')[0].to_i)
+
     policy_hash = find_mapping_from_policy_desc(name)
     "#{policy_hash[:reg_type]},#{value}"
   end

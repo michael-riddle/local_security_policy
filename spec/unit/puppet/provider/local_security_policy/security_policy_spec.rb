@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'puppet_x/lsp/security_policy'
 require 'puppet/util'
 
-# rubocop:disable RSpec/SubjectStub,RSpec/NamedSubject
+# rubocop:disable RSpec/SubjectStub
 describe 'SecurityPolicy' do
   include PuppetlabsSpec::Fixtures
 
@@ -48,8 +48,7 @@ describe 'SecurityPolicy' do
     SecurityPolicy.new
   end
 
-  # sid_to_user function is not used anywhere, no need to test...
-  xit 'returns user' do
+  it 'returns user', skip: 'sid_to_user function is not used anywhere, no need to test' do
     expect(security_policy.sid_to_user('S-1-5-32-556')).to eq('Network Configuration Operators')
     expect(security_policy.sid_to_user('*S-1-5-80-0')).to eq('NT_SERVICE\\ALL_SERVICES')
   end
@@ -64,7 +63,7 @@ describe 'SecurityPolicy' do
   end
 
   it 'returns nil when sid is not found' do
-    expect(security_policy.user_to_sid('N_SERVICE\\ALL_SERVICES')).to eq(nil)
+    expect(security_policy.user_to_sid('N_SERVICE\\ALL_SERVICES')).to be_nil
   end
 
   describe 'registry value' do
@@ -173,3 +172,4 @@ describe 'SecurityPolicy' do
   #   end
   # end
 end
+# rubocop:enable RSpec/SubjectStub
