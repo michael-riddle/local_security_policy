@@ -503,6 +503,11 @@ class SecurityPolicy
         name: 'RequireLogonToChangePassword',
         policy_type: 'System Access',
       },
+      'Allow Remote Shell Access' => {
+        name: 'MACHINE\Software\Policies\Microsoft\Windows\WinRM\Service\WinRS\AllowRemoteShellAccess',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
       'Audit: Audit the access of global system objects' => {
         name: 'MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects',
         reg_type: '4',
@@ -575,6 +580,11 @@ class SecurityPolicy
       },
       'Domain controller: LDAP server signing requirements' => {
         name: 'MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
+      'Domain controller: LDAP server signing requirements Enforcement' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerEnforceIntegrity',
         reg_type: '4',
         policy_type: 'Registry Values',
       },
@@ -823,6 +833,11 @@ class SecurityPolicy
       },
       'Network security: LAN Manager authentication level' => {
         name: 'MACHINE\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel',
+        reg_type: '4',
+        policy_type: 'Registry Values',
+      },
+      'Network security: LDAP client encryption requirements' => {
+        name: 'MACHINE\System\CurrentControlSet\Services\LDAP\ldapclientconfidentiality',
         reg_type: '4',
         policy_type: 'Registry Values',
       },
