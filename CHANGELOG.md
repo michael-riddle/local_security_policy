@@ -1,5 +1,6 @@
-## [2.0.1] - 2026-07-22
-- Added additional missing policy mappings
+## [2.1.0] - 2026-07-22
+### Added
+- Add support for 'Domain controller: LDAP server signing requirements enforcement' and 'Network security: LDAP client encryption requirements'
 
 ## [2.0.0] - 2026-07-21
 ### Changed

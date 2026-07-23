@@ -105,6 +105,8 @@ describe 'SecurityPolicy' do
         ['MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LdapEnforceChannelBinding', '4'],
       'Domain controller: LDAP server signing requirements' =>
         ['MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerIntegrity', '4'],
+      'Domain controller: LDAP server signing requirements enforcement' =>
+        ['MACHINE\System\CurrentControlSet\Services\NTDS\Parameters\LDAPServerEnforceIntegrity', '4'],
       'Domain controller: Refuse machine account password changes' =>
         ['MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RefusePasswordChange', '4'],
     }.each do |policy_desc, (reg_key, reg_type)|
@@ -128,6 +130,25 @@ describe 'SecurityPolicy' do
     it 'converts a REG_SZ registry value' do
       expect(subject.convert_registry_value('Domain controller: Allow vulnerable Netlogon secure channel connections',
                                             'O:BAG:BAD:(A;;RC;;;BA)')).to eq('1,O:BAG:BAD:(A;;RC;;;BA)')
+    end
+  end
+
+  describe 'additional policy mappings' do
+    {
+      'Network security: LDAP client encryption requirements' =>
+        ['MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientConfidentiality', '4'],
+    }.each do |policy_desc, (reg_key, reg_type)|
+      it "maps #{policy_desc}" do
+        mapping = SecurityPolicy.find_mapping_from_policy_desc(policy_desc)
+        expect(mapping[:name]).to eq(reg_key)
+        expect(mapping[:reg_type]).to eq(reg_type)
+        expect(mapping[:policy_type]).to eq('Registry Values')
+      end
+
+      it "reverse maps #{reg_key}" do
+        name, = SecurityPolicy.find_mapping_from_policy_name(reg_key)
+        expect(name).to eq(policy_desc)
+      end
     end
   end
 

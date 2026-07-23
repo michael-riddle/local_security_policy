@@ -124,6 +124,12 @@ local_security_policy { 'System cryptography: Use FIPS compiant algorithms for e
       Devices: Prevent users from installing printer drivers
       Devices: Restrict CD-ROM access to locally logged-on user only
       Devices: Restrict floppy access to locally logged-on user only
+      Domain controller: Allow server operators to schedule tasks
+      Domain controller: Allow vulnerable Netlogon secure channel connections
+      Domain controller: LDAP server channel binding token requirements
+      Domain controller: LDAP server signing requirements
+      Domain controller: LDAP server signing requirements enforcement
+      Domain controller: Refuse machine account password changes
       Domain member: Digitally encrypt or sign secure channel data (always)
       Domain member: Digitally encrypt secure channel data (when possible)
       Domain member: Digitally sign secure channel data (when possible)
@@ -131,6 +137,7 @@ local_security_policy { 'System cryptography: Use FIPS compiant algorithms for e
       Domain member: Maximum machine account password age
       Domain member: Require strong (Windows 2000 or later) session key
       EnableAdminAccount
+      EnableGuestAccount
       Enable computer and user accounts to be trusted for delegation
       Enforce password history
       Force shutdown from a remote system
@@ -185,13 +192,14 @@ local_security_policy { 'System cryptography: Use FIPS compiant algorithms for e
       Network access: Restrict clients allowed to make remote calls to SAM
       Network access: Shares that can be accessed anonymously
       Network access: Sharing and security model for local accounts
-      Network security: All Local System to use computer identity for NTLM
+      Network security: Allow Local System to use computer identity for NTLM
       Network security: Allow LocalSystem NULL session fallback
       Network security: Allow PKU2U authentication requests to this computer to use online identities
       Network security: Configure encryption types allowed for Kerberos
       Network security: Do not store LAN Manager hash value on next password change
       Network security: Force logoff when logon hours expire
       Network security: LAN Manager authentication level
+      Network security: LDAP client encryption requirements
       Network security: LDAP client signing requirements
       Network security: Minimum session security for NTLM SSP based (including secure RPC) clients
       Network security: Minimum session security for NTLM SSP based (including secure RPC) servers
